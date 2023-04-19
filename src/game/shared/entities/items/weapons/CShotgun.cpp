@@ -74,14 +74,6 @@ bool CShotgun::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CShotgun::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "buckshot") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 bool CShotgun::Deploy()
 {
 	return DefaultDeploy("models/v_shotgun.mdl", "models/p_shotgun.mdl", SHOTGUN_DRAW, "shotgun");
@@ -225,14 +217,7 @@ void CShotgun::SecondaryAttack()
 
 void CShotgun::Reload()
 {
-	int maxClip = SHOTGUN_MAX_CLIP;
-
-	if ((m_pPlayer->m_iItems & CTFItem::Backpack) != 0)
-	{
-		maxClip *= 2;
-	}
-
-	if (m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType) <= 0 || GetMagazine1() == maxClip)
+	if (m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType) <= 0 || GetMagazine1() == SHOTGUN_MAX_CLIP)
 		return;
 
 	// don't reload until recoil is done
@@ -300,14 +285,7 @@ void CShotgun::WeaponIdle()
 		}
 		else if (m_fInSpecialReload != 0)
 		{
-			int maxClip = SHOTGUN_MAX_CLIP;
-
-			if ((m_pPlayer->m_iItems & CTFItem::Backpack) != 0)
-			{
-				maxClip *= 2;
-			}
-
-			if (GetMagazine1() != maxClip && 0 != m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType))
+			if (GetMagazine1() != SHOTGUN_MAX_CLIP && 0 != m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType))
 			{
 				Reload();
 			}

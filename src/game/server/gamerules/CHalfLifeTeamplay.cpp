@@ -22,6 +22,22 @@ static char team_names[MAX_TEAMS][MAX_TEAMNAME_LENGTH];
 static int team_scores[MAX_TEAMS];
 static int num_teams = 0;
 
+const char* GetTeamName(CBasePlayer* pEntity)
+{
+	// A bit counterintuitive, this basically means each player model is a team
+	if (g_pGameRules->IsMultiplayer() && g_pGameRules->IsTeamplay())
+	{
+		return g_engfuncs.pfnInfoKeyValue(g_engfuncs.pfnGetInfoKeyBuffer(pEntity->edict()), "model");
+	}
+	else
+	{
+		static char szTmp[256];
+
+		snprintf(szTmp, sizeof(szTmp), "%i", g_engfuncs.pfnGetPlayerUserId(pEntity->edict()));
+		return szTmp;
+	}
+}
+
 CHalfLifeTeamplay::CHalfLifeTeamplay()
 {
 	m_DisableDeathMessages = false;

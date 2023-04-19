@@ -38,7 +38,6 @@ public:
 	bool IsMultiplayer() override { return false; }
 	bool IsDeathmatch() override { return false; }
 	bool IsCoOp() override { return false; }
-	bool IsCTF() override { return false; }
 
 	bool ClientConnected(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]) override;
 	void InitHUD(CBasePlayer* pl) override;

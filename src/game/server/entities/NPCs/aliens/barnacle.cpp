@@ -137,8 +137,6 @@ void CBarnacle::BarnacleThink()
 
 	pev->nextthink = gpGlobals->time + 0.1;
 
-	UpdateShockEffect();
-
 	if (m_hEnemy != nullptr)
 	{
 		// barnacle has prey.
@@ -323,8 +321,6 @@ void CBarnacle::Killed(CBaseEntity* attacker, int iGib)
 
 	// Added for Op4
 	pev->deadflag = DEAD_DYING;
-
-	ClearShockEffect();
 
 	if (m_hEnemy != nullptr)
 	{

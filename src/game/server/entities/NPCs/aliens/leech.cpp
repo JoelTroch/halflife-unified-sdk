@@ -524,8 +524,6 @@ void CLeech::SwimThink()
 	else
 		pev->nextthink = gpGlobals->time + 0.1;
 
-	UpdateShockEffect();
-
 	targetSpeed = LEECH_SWIM_SPEED;
 
 	if (m_waterTime < gpGlobals->time)
@@ -661,8 +659,6 @@ void CLeech::Killed(CBaseEntity* attacker, int iGib)
 	}
 	else
 		SetActivity(ACT_DIEFORWARD);
-
-	ClearShockEffect();
 
 	pev->movetype = MOVETYPE_TOSS;
 	pev->takedamage = DAMAGE_NO;

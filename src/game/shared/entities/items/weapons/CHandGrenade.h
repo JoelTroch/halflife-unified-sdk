@@ -35,7 +35,6 @@ public:
 	void OnCreate() override;
 	void Precache() override;
 	bool GetWeaponInfo(WeaponInfo& info) override;
-	void IncrementAmmo(CBasePlayer* pPlayer) override;
 
 	void PrimaryAttack() override;
 	bool Deploy() override;

@@ -21,7 +21,6 @@
 #include "GameLibrary.h"
 #include "CGameRules.h"
 #include "CHalfLifeCoopplay.h"
-#include "CHalfLifeCTFplay.h"
 #include "CHalfLifeMultiplay.h"
 #include "CHalfLifeRules.h"
 #include "CHalfLifeTeamplay.h"
@@ -440,7 +439,6 @@ GameRulesEntry CreateGameRulesEntry()
 static const std::vector<GameRulesEntry> GameRulesList{
 	CreateGameRulesEntry<CHalfLifeMultiplay>(),
 	CreateGameRulesEntry<CHalfLifeTeamplay>(),
-	CreateGameRulesEntry<CHalfLifeCTFplay>(),
 	CreateGameRulesEntry<CHalfLifeCoopplay>()};
 
 CGameRules* InstallGameRules(std::string_view gameModeName)

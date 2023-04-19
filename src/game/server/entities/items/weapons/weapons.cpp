@@ -160,13 +160,6 @@ void Weapons_RegisterAmmoTypes()
 	g_AmmoTypes.Register("Satchel Charge", SATCHEL_MAX_CARRY, "weapon_satchel");
 	g_AmmoTypes.Register("Trip Mine", TRIPMINE_MAX_CARRY, "weapon_tripmine");
 	g_AmmoTypes.Register("Snarks", SNARK_MAX_CARRY, "weapon_snark");
-	g_AmmoTypes.Register("Penguins", PENGUIN_MAX_CARRY, "weapon_penguin");
-
-	g_AmmoTypes.Register("556", M249_MAX_CARRY);
-	g_AmmoTypes.Register("762", SNIPERRIFLE_MAX_CARRY);
-
-	g_AmmoTypes.Register("spores", SPORELAUNCHER_MAX_CARRY);
-	g_AmmoTypes.Register("shock", SHOCKRIFLE_MAX_CLIP);
 
 	CBasePlayerWeapon::WeaponsLogger->debug("Registered {} ammo types", g_AmmoTypes.GetCount());
 }
@@ -233,14 +226,6 @@ void W_Precache()
 	UTIL_PrecacheOther("ammo_gaussclip");
 	UTIL_PrecacheOther("ammo_rpgclip");
 	UTIL_PrecacheOther("ammo_crossbow");
-	UTIL_PrecacheOther("ammo_556");
-	UTIL_PrecacheOther("ammo_spore");
-	UTIL_PrecacheOther("ammo_762");
-
-	UTIL_PrecacheSound("weapons/spore_hit1.wav");
-	UTIL_PrecacheSound("weapons/spore_hit2.wav");
-	UTIL_PrecacheSound("weapons/spore_hit3.wav");
-
 	if (g_pGameRules->IsMultiplayer())
 	{
 		UTIL_PrecacheOther("weaponbox"); // container for dropped deathmatch weapons
@@ -506,11 +491,6 @@ bool CBasePlayerWeapon::AddPrimaryAmmo(CBasePlayerWeapon* origin, int iCount, co
 		return false;
 	}
 
-	// Don't double for single shot weapons (e.g. RPG)
-	if ((m_pPlayer->m_iItems & CTFItem::Backpack) != 0 && iMaxClip > 1)
-	{
-		iMaxClip *= 2;
-	}
 
 	int iIdAmmo;
 

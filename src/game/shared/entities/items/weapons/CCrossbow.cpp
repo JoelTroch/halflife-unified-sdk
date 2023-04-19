@@ -230,14 +230,6 @@ bool CCrossbow::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CCrossbow::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "bolts") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 bool CCrossbow::Deploy()
 {
 	if (0 != GetMagazine1())

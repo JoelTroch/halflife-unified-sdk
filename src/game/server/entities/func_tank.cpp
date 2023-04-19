@@ -16,6 +16,15 @@
 #include "explode.h"
 #include "UserMessages.h"
 
+// Half-Life: Unified SDK - Vanilla branch notice - START
+//
+// In the original SDK, targeting behavior of the "func_tank_of" entity has been merged in "func_tank".
+// If you want to restore this behavior, simply uncomment this define.
+// If you want to keep the vanilla Half-Life behavior, leave it commented
+//
+// Half-Life: Unified SDK - Vanilla branch notice - END
+//#define OPFOR_FUNC_TANK
+
 #define SF_TANK_ACTIVE 0x0001
 #define SF_TANK_PLAYER 0x0002
 #define SF_TANK_HUMANS 0x0004
@@ -146,12 +155,13 @@ protected:
 	Vector m_sightOrigin; // Last sight of target
 	int m_spread;		  // firing spread
 
+#ifdef OPFOR_FUNC_TANK
 	EHANDLE m_hEnemy;
 
 	// 0 - player only
 	// 1 - all targets allied to player
 	int m_iEnemyType;
-
+#endif
 	bool m_EnableTargetLaser = false;
 	bool m_RecreateTargetLaser = false; // Don't save; used to restore the client side laser
 	string_t m_TargetLaserSpriteName = MAKE_STRING(g_pModelNameLaser);
@@ -186,8 +196,10 @@ DEFINE_FIELD(m_yawCenter, FIELD_FLOAT),
 	DEFINE_FIELD(m_vecControllerUsePos, FIELD_VECTOR),
 	DEFINE_FIELD(m_flNextAttack, FIELD_TIME),
 	DEFINE_FIELD(m_iBulletDamage, FIELD_INTEGER),
+#ifdef OPFOR_FUNC_TANK
 	DEFINE_FIELD(m_hEnemy, FIELD_EHANDLE),
 	DEFINE_FIELD(m_iEnemyType, FIELD_INTEGER),
+#endif
 	DEFINE_FIELD(m_EnableTargetLaser, FIELD_BOOLEAN),
 	DEFINE_FIELD(m_TargetLaserSpriteName, FIELD_STRING),
 	DEFINE_FIELD(m_TargetLaserWidth, FIELD_INTEGER),
@@ -345,11 +357,13 @@ bool CFuncTank::KeyValue(KeyValueData* pkvd)
 		m_maxRange = atof(pkvd->szValue);
 		return true;
 	}
+#ifdef OPFOR_FUNC_TANK
 	else if (FStrEq(pkvd->szKeyName, "enemytype"))
 	{
 		m_iEnemyType = atoi(pkvd->szValue);
 		return true;
 	}
+#endif
 	else if (FStrEq(pkvd->szKeyName, "enable_target_laser"))
 	{
 		m_EnableTargetLaser = atoi(pkvd->szValue) != 0;
@@ -525,6 +539,7 @@ void CFuncTank::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useT
 
 CBaseEntity* CFuncTank::FindTarget(CBaseEntity* pvsPlayer)
 {
+#ifdef OPFOR_FUNC_TANK
 	auto pPlayerTarget = pvsPlayer;
 
 	if (!pPlayerTarget)
@@ -627,6 +642,9 @@ CBaseEntity* CFuncTank::FindTarget(CBaseEntity* pvsPlayer)
 	}
 
 	return pIdealTarget;
+#else
+	return pvsPlayer;
+#endif
 }
 
 bool CFuncTank::InRange(float range)
@@ -701,7 +719,8 @@ void CFuncTank::TrackTarget()
 			return;
 		}
 
-		// Keep tracking the same target unless the target is in cover and a better one is around.
+#ifdef OPFOR_FUNC_TANK
+		// Keep tracking the same target unless the target is in cover and a better 
 		pTarget = m_hEnemy;
 
 		// Forget targets that enable notarget.
@@ -740,6 +759,11 @@ void CFuncTank::TrackTarget()
 
 			m_hEnemy = pTarget;
 		}
+#else
+		pTarget = FindTarget(pPlayer);
+		if (!pTarget)
+			return;
+#endif
 
 		// Calculate angle needed to aim at target
 		targetPosition = pTarget->pev->origin + pTarget->pev->view_ofs;

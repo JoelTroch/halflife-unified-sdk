@@ -53,21 +53,8 @@ inline int gmsgStatusText = 0;
 inline int gmsgStatusValue = 0;
 
 inline int gmsgSpectator = 0;
-inline int gmsgStatusIcon = 0;
-inline int gmsgPlayerBrowse = 0;
 inline int gmsgHudColor = 0;
 inline int gmsgCrosshairColor = 0;
-inline int gmsgFlagIcon = 0;
-inline int gmsgFlagTimer = 0;
-inline int gmsgPlayerIcon = 0;
-inline int gmsgVGUIMenu = 0;
-inline int gmsgAllowSpec = 0;
-inline int gmsgSetMenuTeam = 0;
-inline int gmsgCTFScore = 0;
-inline int gmsgStatsInfo = 0;
-inline int gmsgStatsPlayer = 0;
-inline int gmsgTeamFull = 0;
-inline int gmsgCustomIcon = 0;
 inline int gmsgWeapons = 0;
 
 inline int gmsgEntityInfo = 0;
@@ -77,8 +64,6 @@ inline int gmsgEmitSound = 0;
 inline int gmsgTempEntity = 0;
 
 inline int gmsgSkillVars = 0;
-
-inline int gmsgCampaignSelect = 0;
 
 inline int gmsgTgtLaser = 0;
 

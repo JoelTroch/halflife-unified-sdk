@@ -234,14 +234,7 @@ bool CBasePlayerWeapon::DefaultReload(int iClipSize, int iAnim, float fDelay)
 	if (m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType) <= 0)
 		return false;
 
-	if ((m_pPlayer->m_iItems & CTFItem::Backpack) != 0)
-	{
-		iClipSize *= 2;
-	}
-
-	int j = std::min(iClipSize - m_iClip, m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType));
-
-	if (j <= 0)
+	if (std::min(iClipSize - m_iClip, m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType)) <= 0)
 		return false;
 
 	m_pPlayer->m_flNextAttack = UTIL_WeaponTimeBase() + fDelay;
@@ -319,31 +312,10 @@ bool CanAttack(float attack_time, float curtime, bool isPredicted)
 
 void CBasePlayerWeapon::FinishReload(bool force)
 {
-	int maxClip = iMaxClip();
-
-#ifndef CLIENT_DLL
-	// Reset max clip and max ammo to default values
-	if ((m_pPlayer->m_iItems & CTFItem::Backpack) == 0)
-	{
-		if (m_iClip > iMaxClip())
-		{
-			m_pPlayer->AdjustAmmoByIndex(m_iPrimaryAmmoType, m_iClip - iMaxClip());
-			m_iClip = iMaxClip();
-		}
-	}
-	else
-	{
-		if (maxClip > 1)
-		{
-			maxClip *= 2;
-		}
-	}
-#endif
-
 	if (force || (m_fInReload && m_pPlayer->m_flNextAttack <= UTIL_WeaponTimeBase()))
 	{
 		// complete the reload.
-		int j = std::min(maxClip - m_iClip, m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType));
+		int j = std::min(iMaxClip() - m_iClip, m_pPlayer->GetAmmoCountByIndex(m_iPrimaryAmmoType));
 
 		// Add them to the clip
 		m_iClip += j;

@@ -493,8 +493,6 @@ void CTentacle::Cycle()
 	DispatchAnimEvents();
 	StudioFrameAdvance();
 
-	UpdateShockEffect();
-
 	ChangeYaw(pev->yaw_speed);
 
 	CSound* pSound;
@@ -1024,7 +1022,6 @@ bool CTentacle::TakeDamage(CBaseEntity* inflictor, CBaseEntity* attacker, float 
 void CTentacle::Killed(CBaseEntity* attacker, int iGib)
 {
 	m_iGoalAnim = TENTACLE_ANIM_Pit_Idle;
-	ClearShockEffect();
 	return;
 }
 

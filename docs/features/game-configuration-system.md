@@ -219,22 +219,6 @@ Available in map configuration files.
 "HudColor": "0 160 0"
 ```
 
-### SuitLightType
-
-This section is used to specify a custom suit light type for players to use.
-
-The type must be one of these options:
-* **flashlight**
-* **nightvision**
-
-Available in map configuration files.
-
-#### Example
-
-```jsonc
-"SuitLightType": "nightvision"
-```
-
 ### EntityTemplates
 
 This section is used to specify entity templates to use for specific entities.
@@ -316,7 +300,7 @@ Both `DefaultAmmo` and ammo values can be **-1** to give the maximum amount.
 
 ## Sample configuration file
 
-This configuration file sets a hud color, suit light type and global model replacement file.
+This configuration file sets a hud color and global model replacement file.
 
 ```jsonc
 {
@@ -336,8 +320,7 @@ This configuration file sets a hud color, suit light type and global model repla
 				"GlobalModelReplacement": {
 					"FileNames": ["cfg/Op4ModelReplacement.json"]
 				},
-				"HudColor": "0 160 0",
-				"SuitLightType": "nightvision"
+				"HudColor": "0 160 0"
 			}
 		}
 	]

@@ -23,15 +23,11 @@
 
 #include "basemonster.h"
 #include "CGameRules.h"
-#include "ctf/CTFDefs.h"
 #include "palette.h"
 #include "items/CBaseItem.h"
 #include "sound/MaterialSystem.h"
 
 class CBaseItem;
-class CRope;
-class CTFGoalFlag;
-
 #define PLAYER_FATAL_FALL_SPEED 1024															  // approx 60 feet
 #define PLAYER_MAX_SAFE_FALL_SPEED 580															  // approx 20 feet
 #define DAMAGE_FOR_FALL_SPEED (float)100 / (PLAYER_FATAL_FALL_SPEED - PLAYER_MAX_SAFE_FALL_SPEED) // damage per unit per second.
@@ -52,7 +48,6 @@ class CTFGoalFlag;
 #define PFLAG_DUCKING (1 << 3)	// In the process of ducking, but totally squatted yet
 #define PFLAG_USING (1 << 4)	// Using a continuous entity
 #define PFLAG_OBSERVER (1 << 5) // player is locked in stationary cam mode. Spectators can move, observers can't.
-#define PFLAG_ONROPE (1 << 6)
 
 //
 // generic player
@@ -79,9 +74,6 @@ constexpr int MAX_ITEMS = ITEM_ANTIDOTE + 1; // hard coded item types
 #define SOUND_FLASHLIGHT_ON "items/flashlight1.wav"
 #define SOUND_FLASHLIGHT_OFF "items/flashlight1.wav"
 
-#define SOUND_NIGHTVISION_ON "items/nightvision1.wav"
-#define SOUND_NIGHTVISION_OFF "items/nightvision2.wav"
-
 #define TEAM_NAME_LENGTH 16
 
 enum PLAYER_ANIM
@@ -92,7 +84,6 @@ enum PLAYER_ANIM
 	PLAYER_SUPERJUMP,
 	PLAYER_DIE,
 	PLAYER_ATTACK1,
-	PLAYER_GRAPPLE,
 };
 
 #define MAX_ID_RANGE 2048
@@ -156,9 +147,6 @@ public:
 
 	int random_seed; // See that is shared between client & server for shared weapons code
 
-	Vector m_DisplacerReturn;
-	int m_DisplacerSndRoomtype;
-
 	int m_iPlayerSound;		// the index of the sound list slot reserved for this player
 	int m_iTargetVolume;	// ideal sound volume.
 	int m_iWeaponVolume;	// how loud the player's weapon is right now.
@@ -166,12 +154,6 @@ public:
 	int m_iWeaponFlash;		// brightness of the weapon flash
 	float m_flStopExtraSoundTime;
 
-	/**
-	 *	@brief What type of suit light the player can use
-	 *	@details The initial value here is the default
-	 *	To change this setting at runtime call @see SetSuitLightType so that player state is updated properly
-	 */
-	SuitLightType m_SuitLightType = SuitLightType::Flashlight;
 	float m_flFlashLightTime; // Time until next battery draw/Recharge
 	int m_iFlashBattery;	  // Flashlight Battery Draw
 
@@ -239,41 +221,6 @@ public:
 	int m_iClientHideHUD;
 	int m_iFOV;		  // field of view
 	int m_iClientFOV; // client's known FOV
-
-	// Opposing Force specific
-
-	const char* m_szTeamModel;
-	CTFTeam m_iTeamNum;
-	CTFTeam m_iNewTeamNum;
-	CTFItem::CTFItem m_iItems;
-	unsigned int m_iClientItems;
-	EntityHandle<CTFGoalFlag> m_pFlag;
-	int m_iCurrentMenu;
-	float m_flNextHEVCharge;
-	float m_flNextHealthCharge;
-	float m_flNextAmmoCharge;
-	int m_iLastPlayerTrace;
-	bool m_fPlayingHChargeSound;
-	bool m_fPlayingAChargeSound;
-	int m_nLastShotBy;
-	float m_flLastShotTime;
-	int m_iFlagCaptures;
-	int m_iCTFScore;
-	bool m_fWONAuthSent;
-
-	short m_iOffense;
-	short m_iDefense;
-	short m_iSnipeKills;
-	short m_iBarnacleKills;
-	short m_iSuicides;
-	float m_flLastDamageTime;
-	short m_iLastDamage;
-	short m_iMostDamage;
-	float m_flAccelTime;
-	float m_flBackpackTime;
-	float m_flHealthTime;
-	float m_flShieldTime;
-	float m_flJumpTime;
 
 	// usable player weapons
 	CBasePlayerWeapon* m_rgpPlayerWeapons[MAX_WEAPON_SLOTS];
@@ -385,20 +332,15 @@ public:
 	 */
 	virtual void UpdateClientData();
 
-	void UpdateCTFHud();
 
 	// Player is moved across the transition by other means
 	int ObjectCaps() override { return CBaseMonster::ObjectCaps() & ~FCAP_ACROSS_TRANSITION; }
 	void Precache() override;
 	bool IsOnLadder();
 
-	int GetFlashlightFlag() const;
-
 	bool FlashlightIsOn();
 	void FlashlightTurnOn();
 	void FlashlightTurnOff();
-
-	void SetSuitLightType(SuitLightType type);
 
 	/**
 	 *	@brief updates the position of the player's reserved sound slot in the sound list.
@@ -567,13 +509,6 @@ public:
 
 	float m_flNextChatTime;
 
-	void Player_Menu();
-
-	void ResetMenu();
-
-	bool Menu_Team_Input(int inp);
-	bool Menu_Char_Input(int inp);
-
 	void SetPrefsFromUserinfo(char* infobuffer);
 
 	WeaponSwitchMode m_AutoWepSwitch;
@@ -593,33 +528,7 @@ public:
 	// Whether to fire game_playerspawn next time we check for updates.
 	bool m_FireSpawnTarget = false;
 
-	bool IsOnRope() const { return (m_afPhysicsFlags & PFLAG_ONROPE) != 0; }
-
-	void SetOnRopeState(bool bOnRope)
-	{
-		if (bOnRope)
-			m_afPhysicsFlags |= PFLAG_ONROPE;
-		else
-			m_afPhysicsFlags &= ~PFLAG_ONROPE;
-	}
-
-	CRope* GetRope() { return m_pRope; }
-
-	void SetRope(CRope* pRope)
-	{
-		m_pRope = pRope;
-	}
-
-	void SetIsClimbing(const bool bIsClimbing)
-	{
-		m_bIsClimbing = bIsClimbing;
-	}
-
 private:
-	CRope* m_pRope;
-	float m_flLastClimbTime = 0;
-	bool m_bIsClimbing = false;
-
 	// For saving and level changes.
 	int m_HudColor = RGB_HUD_COLOR.ToInteger();
 	int m_CrosshairColor = RGB_CROSSHAIR_COLOR.ToInteger();

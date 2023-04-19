@@ -227,7 +227,6 @@ void ClientPredictionSystem::WeaponsPostThink(local_state_t* from, local_state_t
 	localPlayer->m_flNextAttack = from->client.m_flNextAttack;
 	localPlayer->m_flNextAmmoBurn = from->client.fuser2;
 	localPlayer->m_flAmmoStartCharge = from->client.fuser3;
-	localPlayer->m_iItems = static_cast<CTFItem::CTFItem>(from->client.iuser4);
 
 	// Stores all our ammo info, so the client side weapons can use them.
 	localPlayer->SetAmmoCount("9mm", (int)from->client.vuser1[0]);
@@ -238,8 +237,6 @@ void ClientPredictionSystem::WeaponsPostThink(local_state_t* from, local_state_t
 	localPlayer->SetAmmoCount("uranium", (int)from->client.ammo_cells);
 	localPlayer->SetAmmoCount("Hornets", (int)from->client.vuser2[0]);
 	localPlayer->SetAmmoCount("rockets", (int)from->client.ammo_rockets);
-	localPlayer->SetAmmoCount("spores", (int)from->client.vuser2.y);
-	localPlayer->SetAmmoCount("762", (int)from->client.vuser2.z);
 
 
 	// Point to current weapon object
@@ -298,7 +295,6 @@ void ClientPredictionSystem::WeaponsPostThink(local_state_t* from, local_state_t
 	to->client.fuser2 = localPlayer->m_flNextAmmoBurn;
 	to->client.fuser3 = localPlayer->m_flAmmoStartCharge;
 	to->client.maxspeed = localPlayer->pev->maxspeed;
-	to->client.iuser4 = localPlayer->m_iItems;
 
 	// HL Weapons
 	to->client.vuser1[0] = localPlayer->GetAmmoCount("9mm");
@@ -310,8 +306,6 @@ void ClientPredictionSystem::WeaponsPostThink(local_state_t* from, local_state_t
 	to->client.ammo_cells = localPlayer->GetAmmoCount("uranium");
 	to->client.vuser2[0] = localPlayer->GetAmmoCount("Hornets");
 	to->client.ammo_rockets = localPlayer->GetAmmoCount("rockets");
-	to->client.vuser2.y = localPlayer->GetAmmoCount("spores");
-	to->client.vuser2.z = localPlayer->GetAmmoCount("762");
 
 	// Make sure that weapon animation matches what the game .dll is telling us
 	//  over the wire ( fixes some animation glitches )

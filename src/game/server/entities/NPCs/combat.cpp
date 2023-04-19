@@ -675,8 +675,6 @@ void CBaseMonster::Killed(CBaseEntity* attacker, int iGib)
 	// pev->enemy = ENT(attacker);//why? (sjb)
 
 	m_IdealMonsterState = MONSTERSTATE_DEAD;
-
-	ClearShockEffect();
 }
 
 void CBaseEntity::SUB_StartFadeOut()
@@ -1409,22 +1407,6 @@ void CBaseEntity::FireBullets(unsigned int cShots, Vector vecSrc, Vector vecDirS
 					DecalGunshot(&tr, iBulletType);
 					break;
 
-				case BULLET_PLAYER_556:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_556_bullet"sv), vecDir, &tr, DMG_BULLET);
-					TEXTURETYPE_PlaySound(&tr, vecSrc, vecEnd, iBulletType);
-					DecalGunshot(&tr, iBulletType);
-					break;
-
-				case BULLET_PLAYER_762:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_762_bullet"sv), vecDir, &tr, DMG_BULLET);
-					TEXTURETYPE_PlaySound(&tr, vecSrc, vecEnd, iBulletType);
-					DecalGunshot(&tr, iBulletType);
-					break;
-
-				case BULLET_PLAYER_EAGLE:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_eagle"sv), vecDir, &tr, DMG_BULLET);
-					break;
-
 				case BULLET_NONE: // FIX
 					pEntity->TraceAttack(attacker, 50, vecDir, &tr, DMG_CLUB);
 					TEXTURETYPE_PlaySound(&tr, vecSrc, vecEnd, iBulletType);
@@ -1505,53 +1487,6 @@ Vector CBaseEntity::FireBulletsPlayer(unsigned int cShots, Vector vecSrc, Vector
 
 				case BULLET_PLAYER_357:
 					pEntity->TraceAttack(attacker, GetSkillFloat("plr_357_bullet"sv), vecDir, &tr, DMG_BULLET);
-					break;
-
-				case BULLET_PLAYER_556:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_556_bullet"sv), vecDir, &tr, DMG_BULLET);
-					break;
-
-				case BULLET_PLAYER_762:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_762_bullet"sv), vecDir, &tr, DMG_BULLET);
-
-					if (tr.pHit && tr.pHit->v.takedamage != DAMAGE_NO)
-					{
-						auto pHitEntity = Instance(tr.pHit);
-
-						pHitEntity->EmitSound(CHAN_BODY, "weapons/xbow_hitbod2.wav", VOL_NORM, ATTN_NORM);
-
-						if (pHitEntity->BloodColor() != DONT_BLEED)
-						{
-							MESSAGE_BEGIN(MSG_PVS, SVC_TEMPENTITY, EyePosition());
-							WRITE_BYTE(TE_BLOODSTREAM);
-
-							WRITE_COORD(tr.vecEndPos.x);
-							WRITE_COORD(tr.vecEndPos.y);
-							WRITE_COORD(tr.vecEndPos.z);
-
-							const auto direction = vecSrc - tr.vecEndPos;
-
-							WRITE_COORD(direction.x);
-							WRITE_COORD(direction.y);
-							WRITE_COORD(direction.z);
-
-							if (pHitEntity->BloodColor() == BLOOD_COLOR_RED)
-							{
-								WRITE_BYTE(70);
-							}
-							else
-							{
-								WRITE_BYTE(pHitEntity->BloodColor());
-							}
-
-							WRITE_BYTE(150);
-							MESSAGE_END();
-						}
-					}
-					break;
-
-				case BULLET_PLAYER_EAGLE:
-					pEntity->TraceAttack(attacker, GetSkillFloat("plr_eagle"sv), vecDir, &tr, DMG_BULLET);
 					break;
 
 				case BULLET_NONE: // FIX

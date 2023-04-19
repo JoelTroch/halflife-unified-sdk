@@ -71,7 +71,7 @@ CTeamMenuPanel::CTeamMenuPanel(int iTrans, bool iRemoveMe, int x, int y, int wid
 	pSchemes->getBgColor(hTitleScheme, r, g, b, a);
 	pLabel->setBgColor(r, g, b, a);
 	pLabel->setContentAlignment(vgui::Label::a_west);
-	pLabel->setText("%s", gHUD.m_TextMessage.BufferedLocaliseTextString("#CTFTitle_SelectYourTeam"));
+	pLabel->setText("%s", gHUD.m_TextMessage.BufferedLocaliseTextString("#TFTitle_SelectYourTeam"));
 
 	// Create the Info Window
 	m_pTeamWindow = new CTransparentPanel(255, TEAMMENU_WINDOW_X, TEAMMENU_WINDOW_Y, TEAMMENU_WINDOW_SIZE_X, TEAMMENU_WINDOW_SIZE_Y);
@@ -121,7 +121,7 @@ CTeamMenuPanel::CTeamMenuPanel(int iTrans, bool iRemoveMe, int x, int y, int wid
 		if (i == 3)
 		{
 			m_pButtons[i]->setBoundKey('3');
-			m_pButtons[i]->setText(gHUD.m_TextMessage.BufferedLocaliseTextString("#CTFTeam_AutoAssign"));
+			m_pButtons[i]->setText(gHUD.m_TextMessage.BufferedLocaliseTextString("#TFTeam_AutoAssign"));
 			m_pButtons[i]->setVisible(true);
 		}
 
@@ -142,32 +142,17 @@ CTeamMenuPanel::CTeamMenuPanel(int iTrans, bool iRemoveMe, int x, int y, int wid
 	}
 
 	// Create the Cancel button
-	m_pCancelButton = new CommandButton(CHudTextMessage::BufferedLocaliseTextString("#CTFMenu_Cancel"), TEAMMENU_TOPLEFT_BUTTON_X, 0, TEAMMENU_BUTTON_SIZE_X, TEAMMENU_BUTTON_SIZE_Y);
+	m_pCancelButton = new CommandButton(CHudTextMessage::BufferedLocaliseTextString("#TFMenu_Cancel"), TEAMMENU_TOPLEFT_BUTTON_X, 0, TEAMMENU_BUTTON_SIZE_X, TEAMMENU_BUTTON_SIZE_Y);
 	m_pCancelButton->setParent(this);
 	m_pCancelButton->addActionSignal(new CMenuHandler_TextWindow(HIDE_TEXTWINDOW));
 	m_pCancelButton->addActionSignal(new CMenuHandler_StringCommand("cancelmenu", true));
 
 	// Create the Spectate button
-	m_pSpectateButton = new SpectateButton(CHudTextMessage::BufferedLocaliseTextString("#CTFMenu_Spectate"), TEAMMENU_TOPLEFT_BUTTON_X, 0, TEAMMENU_BUTTON_SIZE_X, TEAMMENU_BUTTON_SIZE_Y, true);
+	m_pSpectateButton = new SpectateButton(CHudTextMessage::BufferedLocaliseTextString("#TFMenu_Spectate"), TEAMMENU_TOPLEFT_BUTTON_X, 0, TEAMMENU_BUTTON_SIZE_X, TEAMMENU_BUTTON_SIZE_Y, true);
 	m_pSpectateButton->setParent(this);
 	m_pSpectateButton->addActionSignal(new CMenuHandler_StringCommand("spectate", true));
 	m_pSpectateButton->setBoundKey('4');
 	m_pSpectateButton->addInputSignal(new CHandler_MenuButtonOver(this, 4));
-
-	m_pTeamFull = new TextPanel("Team balancing enabled.  Selected team is full.", TEAMMENU_FULL_TOPLEFT_X, TEAMMENU_FULL_TOPLEFT_Y, TEAMMENU_WINDOW_SIZE_X - TEAMMENU_WINDOW_INFO_X, TEAMMENU_WINDOW_TEXT_SIZE_Y);
-	m_pTeamFull->setParent(this);
-	m_pTeamFull->setFont(pSchemes->getFont(hTeamWindowText));
-	pSchemes->getFgColor(hTeamWindowText, r, g, b, a);
-	m_pTeamFull->setFgColor(r, g, b, a);
-	pSchemes->getBgColor(hTeamWindowText, r, g, b, a);
-	m_pTeamFull->setBgColor(r, g, b, a);
-
-	auto pImage = m_pTeamFull->getTextImage();
-
-	int tfwide, tftall;
-	pImage->getTextSize(tfwide, tftall);
-	m_pTeamFull->setSize(tfwide, tftall);
-	m_pTeamFull->setVisible(false);
 
 	Initialize();
 }
@@ -277,7 +262,7 @@ void CTeamMenuPanel::Update()
 	}
 
 	// If the player is already in a team, make the cancel button visible
-	if (0 != gViewPort->m_iCTFTeamNumber)
+	if (0 != g_iTeamNumber)
 	{
 		m_pCancelButton->setPos(TEAMMENU_TOPLEFT_BUTTON_X, iYPos);
 		iYPos += TEAMMENU_BUTTON_SIZE_Y + TEAMMENU_BUTTON_SPACER_Y;
@@ -380,12 +365,6 @@ void CTeamMenuPanel::paintBackground()
 	if (!m_bUpdatedMapName)
 		Update();
 
-	if (0 != m_flTeamFullReset && m_flTeamFullReset <= gHUD.m_flTime)
-	{
-		m_pTeamFull->setVisible(false);
-		m_flTeamFullReset = 0;
-	}
-
 	CMenuPanel::paintBackground();
 }
 
@@ -415,11 +394,4 @@ void CTeamMenuPanel::SetActiveInfo(int iInput)
 	m_iCurrentInfo = iInput;
 
 	m_pScrollPanel->validate();
-}
-
-void CTeamMenuPanel::MsgFunc_TeamFull(const char* pszName, BufferReader& reader)
-{
-	m_pTeamFull->setVisible(reader.ReadByte() != 0);
-
-	m_flTeamFullReset = gHUD.m_flTime + 2.0;
 }

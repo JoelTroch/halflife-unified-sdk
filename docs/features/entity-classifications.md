@@ -36,8 +36,7 @@ The default relationship to all classifications is `none`. The default for a cla
 		"alien_military": "none",
 		"insect": "none",
 		"player_bioweapon": "none",
-		"alien_bioweapon": "none",
-		"race_x": "none"
+		"alien_bioweapon": "none"
 	}
 }
 ```
@@ -64,8 +63,7 @@ The classification `none` is always added and should not have any relationships 
             "player_ally": "dislike",
             "player_bioweapon": "dislike",
             "alien_bioweapon": "dislike",
-            "human_military_ally": "dislike",
-            "race_x": "dislike"
+            "human_military_ally": "dislike"
         }
     },
     "player": {
@@ -78,8 +76,7 @@ The classification `none` is always added and should not have any relationships 
             "alien_prey": "dislike",
             "alien_predator": "dislike",
             "player_bioweapon": "dislike",
-            "alien_bioweapon": "dislike",
-            "race_x": "dislike"
+            "alien_bioweapon": "dislike"
         }
     },
     "human_passive": {
@@ -92,8 +89,7 @@ The classification `none` is always added and should not have any relationships 
             "alien_prey": "dislike",
             "alien_predator": "dislike",
             "player_ally": "ally",
-            "human_military_ally": "dislike",
-            "race_x": "hate"
+            "human_military_ally": "dislike"
         }
     }
 }

@@ -336,8 +336,6 @@ void COsprey::FlyThink()
 	StudioFrameAdvance();
 	pev->nextthink = gpGlobals->time + 0.1;
 
-	UpdateShockEffect();
-
 	if (m_pGoalEnt == nullptr && !FStringNull(pev->target)) // this monster has a target
 	{
 		m_pGoalEnt = UTIL_FindEntityByTargetname(nullptr, STRING(pev->target));
@@ -464,8 +462,6 @@ void COsprey::HitTouch(CBaseEntity* pOther)
 
 void COsprey::Killed(CBaseEntity* attacker, int iGib)
 {
-	ClearShockEffect();
-
 	pev->movetype = MOVETYPE_TOSS;
 	pev->gravity = 0.3;
 	pev->velocity = m_velocity;

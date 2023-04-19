@@ -30,10 +30,8 @@ struct cvar_t;
 #define PC_FIRSTCLASS 1
 #define PC_LASTCLASS 7
 #define PC_UNDEFINED 0
-#define PC_MAX_TEAMS 2
 using namespace vgui;
 
-class CCampaignSelectPanel;
 class Cursor;
 class ScorePanel;
 class SpectatorPanel;
@@ -48,15 +46,10 @@ class CTransparentPanel;
 class CClassMenuPanel;
 class CTeamMenuPanel;
 class TeamFortressViewport;
-class CStatsMenuPanel;
 
-const int StatsTeamsCount = 4;
-
-extern const char* sCTFClassSelection[][7];
+extern const char* sTFClassSelection[];
 extern int sTFValidClassInts[];
-extern const char* sLocalisedClasses[][7];
-extern const char* sLocalisedStatsTeams[StatsTeamsCount];
-extern const char* sCTFStatsSelection[StatsTeamsCount];
+extern const char* sLocalisedClasses[];
 extern int iTeamColors[5][3];
 extern int iNumberOfTeamColors;
 inline TeamFortressViewport* gViewPort = nullptr;
@@ -508,10 +501,6 @@ private:
 	void CreateClassMenu();
 	CMenuPanel* ShowClassMenu();
 	void CreateSpectatorMenu();
-	void CreateStatsMenu();
-
-	void CreateCampaignSelectMenu();
-	void ShowCampaignSelectMenu();
 
 	// Scheme handler
 	CSchemeManager m_SchemeManager;
@@ -581,9 +570,6 @@ public:
 	void HideVGUIMenu();
 	void HideTopMenu();
 
-	void SaveStatsMenu();
-	CMenuPanel* ShowStatsMenu();
-	void SwitchToStatsMenu();
 	void SwitchToScoreBoard();
 	void HideScoreStatsWindow();
 
@@ -618,11 +604,6 @@ public:
 	void MsgFunc_AllowSpec(const char* pszName, BufferReader& reader);
 	void MsgFunc_SpecFade(const char* pszName, BufferReader& reader);
 	void MsgFunc_ResetFade(const char* pszName, BufferReader& reader);
-	void MsgFunc_TeamFull(const char* pszName, BufferReader& reader);
-	void MsgFunc_SetMenuTeam(const char* pszName, BufferReader& reader);
-	void MsgFunc_StatsInfo(const char* pszName, BufferReader& reader);
-	void MsgFunc_StatsPlayer(const char* pszName, BufferReader& reader);
-	void MsgFunc_CmpgnSlct(BufferReader& reader);
 
 	// Input
 	bool SlotInput(int iSlot);
@@ -638,16 +619,13 @@ public:
 	// VGUI Menus
 	CMenuPanel* m_pCurrentMenu;
 	CTeamMenuPanel* m_pTeamMenu;
-	CCampaignSelectPanel* m_CampaignSelectMenu = nullptr;
 	int m_StandardMenu; // indexs in m_pCommandMenus
 	int m_SpectatorOptionsMenu;
 	int m_SpectatorCameraMenu;
 	int m_PlayerMenu; // a list of current player
 	CClassMenuPanel* m_pClassMenu;
-	CStatsMenuPanel* m_pStatsMenu;
 	ScorePanel* m_pScoreBoard;
 	SpectatorPanel* m_pSpectatorPanel;
-	int m_iCTFTeamNumber;
 	char m_szServerName[MAX_SERVERNAME_LENGTH];
 };
 
@@ -1647,13 +1625,13 @@ public:
 class CClassMenuPanel : public CMenuPanel
 {
 private:
-	CTransparentPanel* m_pClassInfoPanel[PC_MAX_TEAMS][PC_LASTCLASS];
+	CTransparentPanel* m_pClassInfoPanel[PC_LASTCLASS];
 	Label* m_pPlayers[PC_LASTCLASS];
-	ClassButton* m_pButtons[PC_MAX_TEAMS][PC_LASTCLASS];
+	ClassButton* m_pButtons[PC_LASTCLASS];
 	CommandButton* m_pCancelButton;
 	ScrollPanel* m_pScrollPanel;
 
-	CImageLabel* m_pClassImages[PC_MAX_TEAMS][PC_LASTCLASS];
+	CImageLabel* m_pClassImages[PC_LASTCLASS];
 
 	int m_iCurrentInfo;
 
@@ -1692,9 +1670,6 @@ public:
 	CommandButton* m_pCancelButton;
 	CommandButton* m_pSpectateButton;
 
-	TextPanel* m_pTeamFull;
-	float m_flTeamFullReset;
-
 	int m_iCurrentInfo;
 
 public:
@@ -1712,13 +1687,5 @@ public:
 	{
 		CMenuPanel::Reset();
 		m_iCurrentInfo = 0;
-
-		if (m_flTeamFullReset <= gHUD.m_flTime)
-		{
-			m_pTeamFull->setVisible(false);
-			m_flTeamFullReset = 0;
-		}
 	}
-
-	void MsgFunc_TeamFull(const char* pszName, BufferReader& reader);
 };

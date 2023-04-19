@@ -41,12 +41,8 @@ cvar_t sv_allowbunnyhopping = {"sv_allowbunnyhopping", "0", FCVAR_SERVER};
 
 // BEGIN Opposing Force variables
 
-cvar_t ctfplay = {"mp_ctfplay", "0", FCVAR_SERVER};
-cvar_t ctf_autoteam = {"mp_ctf_autoteam", "0", FCVAR_SERVER};
-cvar_t ctf_capture = {"mp_ctf_capture", "0", FCVAR_SERVER};
 
 cvar_t spamdelay = {"sv_spamdelay", "3.0", FCVAR_SERVER};
-cvar_t multipower = {"mp_multipower", "0", FCVAR_SERVER};
 
 // END Opposing Force variables
 
@@ -119,12 +115,8 @@ void GameDLLInit()
 
 	// BEGIN REGISTER CVARS FOR OPPOSING FORCE
 
-	CVAR_REGISTER(&ctfplay);
-	CVAR_REGISTER(&ctf_autoteam);
-	CVAR_REGISTER(&ctf_capture);
 
 	CVAR_REGISTER(&spamdelay);
-	CVAR_REGISTER(&multipower);
 
 	CVAR_REGISTER(&sv_entityinfo_enabled);
 	CVAR_REGISTER(&sv_entityinfo_eager);

@@ -289,25 +289,6 @@ void CLogicSetSkillVar::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_T
 	SUB_UseTargets(pActivator, USE_TOGGLE, 0);
 }
 
-class CLogicCampaignSelect : public CPointEntity
-{
-	DECLARE_CLASS(CLogicCampaignSelect, CPointEntity);
-
-public:
-	void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) override;
-};
-
-LINK_ENTITY_TO_CLASS(logic_campaignselect, CLogicCampaignSelect);
-
-void CLogicCampaignSelect::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
-{
-	if (auto player = ToBasePlayer(pActivator); player)
-	{
-		MESSAGE_BEGIN(MSG_ONE, gmsgCampaignSelect, nullptr, player);
-		MESSAGE_END();
-	}
-}
-
 constexpr int MaxRandomTargets = 16;
 constexpr std::string_view TargetKeyValuePrefix{"target"sv};
 

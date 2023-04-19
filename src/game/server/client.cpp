@@ -40,8 +40,6 @@
 #include "ClientCommandRegistry.h"
 #include "ServerLibrary.h"
 
-#include "ctf/ctf_goals.h"
-
 unsigned int g_ulFrameCount;
 
 /**
@@ -138,8 +136,7 @@ void ClientKill(edict_t* pEntity)
 
 	assert(pl);
 
-	// Only check for teams in CTF gamemode
-	if ((pl->pev->flags & FL_SPECTATOR) != 0 || (g_pGameRules->IsCTF() && pl->m_iTeamNum == CTFTeam::None))
+	if ((pl->pev->flags & FL_SPECTATOR) != 0)
 	{
 		return;
 	}
@@ -633,23 +630,6 @@ void SV_CreateClientCommands()
 			else
 			{
 				UTIL_ConsolePrint(player, "Usage: set_crosshair_color <r> <g> <b> (values in range 0-255)\n");
-			} },
-		{.Flags = ClientCommandFlag::Cheat});
-
-	g_ClientCommands.Create("set_suit_light_type", [](CBasePlayer* player, const auto& args)
-		{
-			if (args.Count() > 1)
-			{
-				const auto type = SuitLightTypeFromString(args.Argument(1));
-
-				if (type.has_value())
-				{
-					player->SetSuitLightType(type.value());
-				}
-				else
-				{
-					UTIL_ConsolePrint(player, "Unknown suit light type \"{}\"\n", args.Argument(1));
-				}
 			} },
 		{.Flags = ClientCommandFlag::Cheat});
 
@@ -1289,9 +1269,6 @@ void ClientPrecache()
 	UTIL_PrecacheSound(SOUND_FLASHLIGHT_ON);
 	UTIL_PrecacheSound(SOUND_FLASHLIGHT_OFF);
 
-	UTIL_PrecacheSound(SOUND_NIGHTVISION_ON);
-	UTIL_PrecacheSound(SOUND_NIGHTVISION_OFF);
-
 	// player gib sounds
 	UTIL_PrecacheSound("common/bodysplat.wav");
 
@@ -1322,11 +1299,9 @@ void ClientPrecache()
 	UTIL_PrecacheSound("player/geiger2.wav");
 	UTIL_PrecacheSound("player/geiger1.wav");
 
-	UTIL_PrecacheSound("ctf/pow_big_jump.wav");
 
 	// for cheat_givemagazine
 	UTIL_PrecacheSound(DefaultItemPickupSound);
-
 	if (giPrecacheGrunt)
 		UTIL_PrecacheOther("monster_human_grunt");
 }
@@ -1555,12 +1530,6 @@ int AddToFullPack(entity_state_t* state, int e, edict_t* ent, edict_t* host, int
 
 	state->skin = ent->v.skin;
 	state->effects = ent->v.effects;
-
-	// Remove the night vision illumination effect so other players don't see it
-	if (0 != player && host != ent)
-	{
-		state->effects &= ~EF_BRIGHTLIGHT;
-	}
 
 	// This non-player entity is being moved by the game .dll and not the physics simulation system
 	//  make sure that we interpolate it's position on the client if it moves
@@ -2068,13 +2037,11 @@ void UpdateClientData(const edict_t* ent, int sendweapons, clientdata_t* cd)
 	{
 		cd->weapons = pl->m_HudFlags;
 		cd->fov = pl->m_iFOV;
-		cd->iuser4 = pl->m_iItems;
 	}
 	else
 	{
 		cd->weapons = 0;			// Non-players don't have hud flags.
 		cd->fov = plOrg->m_iFOV;	// Use actual player FOV if target is not a player.
-		cd->iuser4 = CTFItem::None; // Non-players don't have items.
 	}
 
 #if defined(CLIENT_WEAPONS)
@@ -2093,8 +2060,6 @@ void UpdateClientData(const edict_t* ent, int sendweapons, clientdata_t* cd)
 			cd->ammo_rockets = pl->GetAmmoCount("rockets");
 			cd->ammo_cells = pl->GetAmmoCount("uranium");
 			cd->vuser2.x = pl->GetAmmoCount("Hornets");
-			cd->vuser2.y = pl->GetAmmoCount("spores");
-			cd->vuser2.z = pl->GetAmmoCount("762");
 
 			if (pl->m_pActiveWeapon)
 			{

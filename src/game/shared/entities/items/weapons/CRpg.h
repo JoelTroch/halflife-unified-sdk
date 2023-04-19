@@ -43,7 +43,6 @@ public:
 	void Precache() override;
 	void Reload() override;
 	bool GetWeaponInfo(WeaponInfo& info) override;
-	void IncrementAmmo(CBasePlayer* pPlayer) override;
 
 	bool Deploy() override;
 	bool CanHolster() override;

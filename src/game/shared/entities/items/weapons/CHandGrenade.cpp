@@ -53,22 +53,6 @@ bool CHandGrenade::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CHandGrenade::IncrementAmmo(CBasePlayer* pPlayer)
-{
-#ifndef CLIENT_DLL
-	// TODO: not sure how useful this is given that the player has to have this weapon for this method to be called
-	if (!pPlayer->HasNamedPlayerWeapon("weapon_handgrenade"))
-	{
-		pPlayer->GiveNamedItem("weapon_handgrenade");
-	}
-#endif
-
-	if (pPlayer->GiveAmmo(1, "Hand Grenade") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 bool CHandGrenade::Deploy()
 {
 	m_flReleaseThrow = -1;

@@ -38,7 +38,6 @@
 #include "sound/ISoundSystem.h"
 
 #include "ui/hud/HudSpriteConfigSystem.h"
-#include "ui/vgui/CampaignSelectSystem.h"
 
 #include "utils/ReplacementMaps.h"
 
@@ -261,7 +260,6 @@ void ClientLibrary::AddGameSystems()
 	g_GameSystems.Add(&g_ClientPrediction);
 	g_GameSystems.Add(&sound::g_ClientSoundReplacement);
 	g_GameSystems.Add(&g_HudSpriteConfig);
-	g_GameSystems.Add(&g_CampaignSelect);
 }
 
 SDL_Window* ClientLibrary::FindWindow()

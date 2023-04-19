@@ -185,9 +185,7 @@ target_sources(client PRIVATE
 	ui/hud/hud.h
 	ui/hud/hud_debuginfo.cpp
 	ui/hud/hud_entityinfo.cpp
-	ui/hud/hud_flagicons.cpp
 	ui/hud/hud_msg.cpp
-	ui/hud/hud_playerbrowse.cpp
 	ui/hud/hud_projectinfo.cpp
 	ui/hud/hud_redraw.cpp
 	ui/hud/hud_spectator.cpp
@@ -204,10 +202,6 @@ target_sources(client PRIVATE
 	ui/hud/text_message.cpp
 	ui/hud/train.cpp
 	
-	ui/vgui/CampaignSelectSystem.cpp
-	ui/vgui/CampaignSelectSystem.h
-	ui/vgui/vgui_CampaignSelect.cpp
-	ui/vgui/vgui_CampaignSelect.h
 	ui/vgui/vgui_ClassMenu.cpp
 	ui/vgui/vgui_CustomObjects.cpp
 	ui/vgui/vgui_int.cpp
@@ -219,8 +213,6 @@ target_sources(client PRIVATE
 	ui/vgui/vgui_ScorePanel.h
 	ui/vgui/vgui_SpectatorPanel.cpp
 	ui/vgui/vgui_SpectatorPanel.h
-	ui/vgui/vgui_StatsMenuPanel.cpp
-	ui/vgui/vgui_StatsMenuPanel.h
 	ui/vgui/vgui_TeamFortressViewport.cpp
 	ui/vgui/vgui_TeamFortressViewport.h
 	ui/vgui/vgui_teammenu.cpp

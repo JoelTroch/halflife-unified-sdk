@@ -42,7 +42,6 @@ public:
 	void OnCreate() override;
 	void Precache() override;
 	bool GetWeaponInfo(WeaponInfo& info) override;
-	void IncrementAmmo(CBasePlayer* pPlayer) override;
 
 	bool Deploy() override;
 	void Holster() override;

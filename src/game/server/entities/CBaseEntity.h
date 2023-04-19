@@ -31,11 +31,9 @@ class CBaseItem;
 class CBaseMonster;
 class CBasePlayerWeapon;
 class CCineMonster;
-class COFSquadTalkMonster;
 class CSound;
 class CSquadMonster;
 class CTalkMonster;
-class CItemCTF;
 struct ReplacementMap;
 
 #define MAX_PATH_SIZE 10 // max number of nodes available for a path.
@@ -317,9 +315,7 @@ public:
 	virtual CBaseMonster* MyMonsterPointer() { return nullptr; }
 	virtual CTalkMonster* MyTalkMonsterPointer() { return nullptr; }
 	virtual CSquadMonster* MySquadMonsterPointer() { return nullptr; }
-	virtual COFSquadTalkMonster* MySquadTalkMonsterPointer() { return nullptr; }
 	virtual CBaseItem* MyItemPointer() { return nullptr; }
-	virtual CItemCTF* MyItemCTFPointer() { return nullptr; }
 	virtual float GetDelay() { return 0; }
 	virtual bool IsMoving() { return pev->velocity != g_vecZero; }
 	virtual void OverrideReset() {}

@@ -77,14 +77,6 @@ bool CGauss::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CGauss::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "uranium") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 bool CGauss::Deploy()
 {
 	m_pPlayer->m_flPlayAftershock = 0.0;

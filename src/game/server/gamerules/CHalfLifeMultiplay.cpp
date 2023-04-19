@@ -21,7 +21,6 @@
 #include "hltv.h"
 #include "UserMessages.h"
 
-#include "CHalfLifeCTFplay.h"
 #include "MapCycleSystem.h"
 #include "PlayerInventory.h"
 #include "items/CBaseItem.h"
@@ -201,48 +200,6 @@ bool CHalfLifeMultiplay::FShouldSwitchWeapon(CBasePlayer* pPlayer, CBasePlayerWe
 bool CHalfLifeMultiplay::ClientConnected(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128])
 {
 	g_VoiceGameMgr.ClientConnected(pEntity);
-
-	int playersInTeamsCount = 0;
-
-	for (int iPlayer = 1; iPlayer <= gpGlobals->maxClients; ++iPlayer)
-	{
-		auto pPlayer = UTIL_PlayerByIndex(iPlayer);
-
-		if (pPlayer)
-		{
-			playersInTeamsCount += (pPlayer->m_iTeamNum > CTFTeam::None) ? 1 : 0;
-		}
-	}
-
-	if (playersInTeamsCount <= 1)
-	{
-		for (int iPlayer = 1; iPlayer <= gpGlobals->maxClients; ++iPlayer)
-		{
-			auto pPlayer = UTIL_PlayerByIndex(iPlayer);
-
-			if (pPlayer && pPlayer->m_iItems != CTFItem::None)
-			{
-				if ((pPlayer->m_iItems & CTFItem::ItemsMask) != 0)
-				{
-					RespawnPlayerCTFPowerups(pPlayer, true);
-				}
-
-				ClientPrint(pPlayer, HUD_PRINTCENTER, "#CTFGameReset");
-			}
-		}
-	}
-
-	if (pEntity)
-	{
-		// TODO: really shouldn't be modifying this directly
-		auto portNumber = strchr(const_cast<char*>(pszAddress), ':');
-
-		if (portNumber)
-			*portNumber = '\0';
-
-		pszPlayerIPs[ENTINDEX(pEntity)] = strdup(pszAddress);
-	}
-
 	return true;
 }
 
@@ -268,12 +225,6 @@ void CHalfLifeMultiplay::InitHUD(CBasePlayer* pl)
 	pl->SendScoreInfo(pl);
 
 	SendMOTDToClient(pl);
-
-	if (IsCTF())
-	{
-		pl->m_iCurrentMenu = MENU_TEAM;
-		pl->Player_Menu();
-	}
 
 	// loop through all active players and send their score info to the new client
 	for (int i = 1; i <= gpGlobals->maxClients; i++)
@@ -302,17 +253,9 @@ void CHalfLifeMultiplay::ClientDisconnected(edict_t* pClient)
 
 		if (pPlayer)
 		{
-			if (!g_fGameOver && (pPlayer->m_iItems & CTFItem::ItemsMask) != 0)
-				ScatterPlayerCTFPowerups(pPlayer);
-
 			FireTargets("game_playerleave", pPlayer, pPlayer, USE_TOGGLE, 0);
 
 			Logger->trace("{} disconnected", PlayerLogInfo{*pPlayer});
-
-			const int playerIndex = pPlayer->entindex();
-
-			free(pszPlayerIPs[playerIndex]);
-			pszPlayerIPs[playerIndex] = nullptr;
 
 			pPlayer->RemoveAllItems(true); // destroy all of the players weapons and items
 
@@ -342,79 +285,6 @@ bool CHalfLifeMultiplay::FPlayerCanTakeDamage(CBasePlayer* pPlayer, CBaseEntity*
 
 void CHalfLifeMultiplay::PlayerThink(CBasePlayer* pPlayer)
 {
-	if ((pPlayer->m_iItems & CTFItem::PortableHEV) != 0)
-	{
-		if (pPlayer->m_flNextHEVCharge <= gpGlobals->time)
-		{
-			if (pPlayer->pev->armorvalue < 150)
-			{
-				pPlayer->pev->armorvalue += 1;
-
-				if (!pPlayer->m_fPlayingAChargeSound)
-				{
-					pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_armor_charge.wav", VOL_NORM, ATTN_NORM);
-					pPlayer->m_fPlayingAChargeSound = true;
-				}
-			}
-			else if (pPlayer->m_fPlayingAChargeSound)
-			{
-				pPlayer->StopSound(CHAN_STATIC, "ctf/pow_armor_charge.wav");
-				pPlayer->m_fPlayingAChargeSound = false;
-			}
-
-			pPlayer->m_flNextHEVCharge = gpGlobals->time + 0.5;
-		}
-	}
-	else if (pPlayer->pev->armorvalue > 100 && pPlayer->m_flNextHEVCharge <= gpGlobals->time)
-	{
-		pPlayer->pev->armorvalue -= 1;
-		pPlayer->m_flNextHEVCharge = gpGlobals->time + 0.5;
-	}
-
-	if ((pPlayer->m_iItems & CTFItem::Regeneration) != 0)
-	{
-		if (pPlayer->m_flNextHealthCharge <= gpGlobals->time)
-		{
-			if (pPlayer->pev->health < 150.0)
-			{
-				pPlayer->pev->health += 1;
-
-				if (!pPlayer->m_fPlayingHChargeSound)
-				{
-					pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_health_charge.wav", VOL_NORM, ATTN_NORM);
-					pPlayer->m_fPlayingHChargeSound = true;
-				}
-			}
-			else if (pPlayer->m_fPlayingHChargeSound)
-			{
-				pPlayer->StopSound(CHAN_STATIC, "ctf/pow_health_charge.wav");
-				pPlayer->m_fPlayingHChargeSound = false;
-			}
-
-			pPlayer->m_flNextHealthCharge = gpGlobals->time + 0.5;
-		}
-	}
-	else if (pPlayer->pev->health > 100.0 && gpGlobals->time >= pPlayer->m_flNextHealthCharge)
-	{
-		pPlayer->pev->health -= 1;
-		pPlayer->m_flNextHealthCharge = gpGlobals->time + 0.5;
-	}
-
-	if (pPlayer->m_pActiveWeapon && pPlayer->m_flNextAmmoCharge <= gpGlobals->time && (pPlayer->m_iItems & CTFItem::Backpack) != 0)
-	{
-		pPlayer->m_pActiveWeapon->IncrementAmmo(pPlayer);
-		pPlayer->m_flNextAmmoCharge = gpGlobals->time + 0.75;
-	}
-
-	if (gpGlobals->time - pPlayer->m_flLastDamageTime > 0.15)
-	{
-		if (pPlayer->m_iMostDamage < pPlayer->m_iLastDamage)
-			pPlayer->m_iMostDamage = pPlayer->m_iLastDamage;
-
-		pPlayer->m_flLastDamageTime = 0;
-		pPlayer->m_iLastDamage = 0;
-	}
-
 	if (g_fGameOver)
 	{
 		// check for button presses
@@ -426,13 +296,6 @@ void CHalfLifeMultiplay::PlayerThink(CBasePlayer* pPlayer)
 		pPlayer->pev->button = 0;
 		pPlayer->m_afButtonReleased = 0;
 	}
-}
-
-void CHalfLifeMultiplay::PlayerSpawn(CBasePlayer* pPlayer)
-{
-	CGameRules::PlayerSpawn(pPlayer);
-
-	InitItemsForPlayer(pPlayer);
 }
 
 bool CHalfLifeMultiplay::FPlayerCanRespawn(CBasePlayer* pPlayer)
@@ -496,11 +359,6 @@ void CHalfLifeMultiplay::PlayerKilled(CBasePlayer* pVictim, CBaseEntity* pKiller
 	if (pVictim->HasNamedPlayerWeapon("weapon_satchel"))
 	{
 		DeactivateSatchels(pVictim);
-	}
-
-	if (pVictim->IsPlayer() && !g_fGameOver && (pVictim->m_iItems & CTFItem::ItemsMask) != 0)
-	{
-		ScatterPlayerCTFPowerups(pVictim);
 	}
 }
 
@@ -694,8 +552,6 @@ void CHalfLifeMultiplay::GoToIntermission()
 {
 	if (g_fGameOver)
 		return; // intermission has already been triggered, so ignore.
-
-	FlushCTFPowerupTimes();
 
 	MESSAGE_BEGIN(MSG_ALL, SVC_INTERMISSION);
 	MESSAGE_END();

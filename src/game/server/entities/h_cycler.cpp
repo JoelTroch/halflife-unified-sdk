@@ -116,8 +116,6 @@ void CCycler::Think()
 		StudioFrameAdvance();
 	}
 
-	UpdateShockEffect();
-
 	if (m_fSequenceFinished && !m_fSequenceLoops)
 	{
 		// ResetSequenceInfo();
@@ -296,8 +294,6 @@ void CWreckage::Think()
 {
 	StudioFrameAdvance();
 	pev->nextthink = gpGlobals->time + 0.2;
-
-	UpdateShockEffect();
 
 	if (0 != pev->dmgtime)
 	{

@@ -25,7 +25,6 @@ In singleplayer the singleplayer game mode is always used regardless of the game
 | singleplayer | Singleplayer. Cannot be used in the game mode selection options |
 | deathmatch | Free-for-all deathmatch |
 | teamplay | Player model-based team deathmatch |
-| ctf | Capture The Flag |
 | coop | Co-operative play (players versus enemies) |
 
 The list of multiplayer game modes can also be retrieved using the console command `mp_list_gamemodes` when loaded into a local game.

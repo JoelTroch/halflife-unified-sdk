@@ -76,20 +76,6 @@ bool CMP5::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CMP5::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "9mm") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-
-	if (m_flNextGrenadeLoad < gpGlobals->time)
-	{
-		pPlayer->GiveAmmo(1, "ARgrenades");
-		m_flNextGrenadeLoad = gpGlobals->time + 10;
-	}
-}
-
 bool CMP5::Deploy()
 {
 	return DefaultDeploy("models/v_9mmAR.mdl", "models/p_9mmAR.mdl", MP5_DEPLOY, "mp5");

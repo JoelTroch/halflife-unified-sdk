@@ -132,11 +132,6 @@ public:
 	virtual bool IsCoOp() = 0;
 
 	/**
-	 *	@brief is this a ctf game?
-	 */
-	virtual bool IsCTF() = 0;
-
-	/**
 	 *	@brief this is the game name that gets seen in the server browser
 	 */
 	virtual const char* GetGameDescription() { return "Half-Life"; }

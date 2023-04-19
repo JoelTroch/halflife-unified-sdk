@@ -369,27 +369,11 @@ public:
 	void MsgFunc_FlashBat(const char* pszName, BufferReader& reader);
 
 private:
-	LightData* GetLightData()
-	{
-		switch (m_SuitLightType)
-		{
-		default:
-		case SuitLightType::Flashlight:
-			return &m_Flashlight;
-		case SuitLightType::Nightvision:
-			return &m_Nightvision;
-		}
-	}
-
-	void DrawNightVision();
+	LightData* GetLightData() { return &m_Flashlight; }
 
 private:
 	LightData m_Flashlight;
-	LightData m_Nightvision;
 
-	HSPRITE m_nvSprite;
-
-	SuitLightType m_SuitLightType = SuitLightType::Flashlight;
 	float m_flBat;
 	int m_iBat;
 	bool m_fOn;
@@ -525,90 +509,6 @@ private:
 //
 //-----------------------------------------------------
 //
-
-class CHudFlagIcons : public CHudBase
-{
-public:
-	bool Init();
-	bool VidInit();
-	void InitHUDData();
-	bool Draw(float flTime);
-
-	void EnableFlag(const char* pszFlagName, unsigned char team_idx, unsigned char red, unsigned char green, unsigned char blue, unsigned char score);
-	void DisableFlag(const char* pszFlagName, unsigned char team_idx);
-
-	void MsgFunc_FlagIcon(const char* pszName, BufferReader& reader);
-	void MsgFunc_FlagTimer(const char* pszName, BufferReader& reader);
-
-private:
-	enum
-	{
-		MAX_FLAGSPRITENAME_LENGTH = 24,
-		MAX_FLAGSPRITES = 4,
-	};
-
-	struct flag_sprite_t
-	{
-		char szSpriteName[MAX_FLAGSPRITENAME_LENGTH];
-		HSPRITE spr;
-		Rect rc;
-		unsigned char r;
-		unsigned char g;
-		unsigned char b;
-		unsigned char score;
-	};
-
-
-	flag_sprite_t m_FlagList[MAX_FLAGSPRITES];
-	bool m_bIsTimer;
-	bool m_bTimerReset;
-	float m_flTimeStart;
-	float m_flTimeLimit;
-};
-
-
-class CHudPlayerBrowse : public CHudBase
-{
-public:
-	bool Init();
-	bool VidInit();
-	void InitHUDData();
-	bool Draw(float flTime);
-
-	void MsgFunc_PlyrBrowse(const char* pszName, BufferReader& reader);
-
-private:
-	enum
-	{
-		MAX_POWERUPSPRITENAME_LENGTH = 15,
-	};
-
-	struct powerup_sprite_t
-	{
-		char szSpriteName[MAX_POWERUPSPRITENAME_LENGTH];
-		HSPRITE spr;
-		Rect rc;
-		RGB24 color;
-	};
-
-	float m_flDelayFade;
-	float m_flDelayFadeSprite;
-
-	powerup_sprite_t m_PowerupSprite;
-
-	char m_szLineBuffer[256];
-	char m_szNewLineBuffer[256];
-
-	int m_iTeamNum;
-	int m_iNewTeamNum;
-	int m_iHealth;
-	int m_iArmor;
-	bool m_fFriendly;
-};
-
-//
-//-----------------------------------------------------
-//
 class CHudScoreboard : public CHudBase
 {
 public:
@@ -622,8 +522,6 @@ public:
 	void MsgFunc_ScoreInfo(const char* pszName, BufferReader& reader);
 	void MsgFunc_TeamInfo(const char* pszName, BufferReader& reader);
 	void MsgFunc_TeamScore(const char* pszName, BufferReader& reader);
-	void MsgFunc_PlayerIcon(const char* pszName, BufferReader& reader);
-	void MsgFunc_CTFScore(const char* pszName, BufferReader& reader);
 	void DeathMsg(int killer, int victim);
 
 
@@ -720,8 +618,6 @@ private:
 	float m_flMouseSensitivity = 0;
 	int m_iConcussionEffect = 0;
 
-	bool m_NightVisionState = false;
-
 	cvar_t* default_fov = nullptr;
 
 public:
@@ -810,10 +706,6 @@ public:
 	CHudMenu m_Menu;
 	CHudTextMessage m_TextMessage;
 	CHudStatusIcons m_StatusIcons;
-
-	CHudFlagIcons m_FlagIcons;
-	CHudPlayerBrowse m_PlayerBrowse;
-
 	CHudProjectInfo m_ProjectInfo;
 	CHudDebugInfo m_DebugInfo;
 	CHudEntityInfo m_EntityInfo;
@@ -861,21 +753,7 @@ public:
 
 	float GetSensitivity();
 
-	bool IsNightVisionOn() const { return m_NightVisionState; }
-
-	void SetNightVisionState(bool state);
-
-	RGB24 GetHudItemColor(RGB24 color) const
-	{
-		if (IsNightVisionOn())
-		{
-			return m_HudItemColor;
-		}
-		else
-		{
-			return color;
-		}
-	}
+	RGB24 GetHudItemColor(RGB24 color) const { return color; }
 };
 
 inline CHud gHUD;

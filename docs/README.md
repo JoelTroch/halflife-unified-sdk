@@ -1,6 +1,8 @@
-# Unified SDK documentation
+# Unified SDK (vanilla branch) documentation
 
-The files in this directory and subdirectories contain documentation for the Unified SDK as well as tutorials and resources. Please check them before asking for help.
+The files in this directory and subdirectories contain documentation for the Unified SDK (**vanilla branch**) as well as tutorials and resources. Please check them before asking for help.
+
+**Vanilla specific notice:** this documentation is slightly modified to accomodate the changes made in this **fork**. If you are using the default Unified SDK, please consult [upstream's documentation](https://github.com/SamVanheer/halflife-unified-sdk/tree/master/docs) instead.
 
 > <span style="background-color:orange; color: black">Warning
 > </br>
@@ -56,7 +58,6 @@ The files in this directory and subdirectories contain documentation for the Uni
 * [Material system](features/material-system.md)
 * [Mapcycle](features/mapcycle.md)
 * [Bot system](features/bot-system.md)
-* [Campaign selection system](features/campaign-selection-system.md)
 * [Hud Sprite and HUD Replacement Systems](features/hud-sprite-system.md)
 * [Inventory System](features/inventory-system.md)
 * [Game Modes](features/game-modes.md)

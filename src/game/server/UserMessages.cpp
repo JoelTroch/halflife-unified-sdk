@@ -27,7 +27,7 @@ void LinkUserMessages()
 
 	gmsgCurWeapon = REG_USER_MSG("CurWeapon", 3);
 	gmsgGeigerRange = REG_USER_MSG("Geiger", 1);
-	gmsgFlashlight = REG_USER_MSG("Flashlight", 3);
+	gmsgFlashlight = REG_USER_MSG("Flashlight", 2);
 	gmsgFlashBattery = REG_USER_MSG("FlashBat", 1);
 	gmsgHealth = REG_USER_MSG("Health", 2);
 	gmsgDamage = REG_USER_MSG("Damage", 12);
@@ -62,29 +62,14 @@ void LinkUserMessages()
 	gmsgStatusValue = REG_USER_MSG("StatusValue", 3);
 
 	gmsgSpectator = g_engfuncs.pfnRegUserMsg("Spectator", 2);
-	gmsgStatusIcon = g_engfuncs.pfnRegUserMsg("StatusIcon", -1);
-	gmsgPlayerBrowse = g_engfuncs.pfnRegUserMsg("PlyrBrowse", -1);
 	gmsgHudColor = g_engfuncs.pfnRegUserMsg("HudColor", 3);
 	gmsgCrosshairColor = g_engfuncs.pfnRegUserMsg("CrsshrClr", 3);
-	gmsgFlagIcon = g_engfuncs.pfnRegUserMsg("FlagIcon", -1);
-	gmsgFlagTimer = g_engfuncs.pfnRegUserMsg("FlagTimer", -1);
-	gmsgPlayerIcon = g_engfuncs.pfnRegUserMsg("PlayerIcon", -1);
-	gmsgVGUIMenu = g_engfuncs.pfnRegUserMsg("VGUIMenu", -1);
-	gmsgAllowSpec = g_engfuncs.pfnRegUserMsg("AllowSpec", 1);
-	gmsgSetMenuTeam = g_engfuncs.pfnRegUserMsg("SetMenuTeam", 1);
-	gmsgCTFScore = g_engfuncs.pfnRegUserMsg("CTFScore", 2);
-	gmsgStatsInfo = g_engfuncs.pfnRegUserMsg("StatsInfo", -1);
-	gmsgStatsPlayer = g_engfuncs.pfnRegUserMsg("StatsPlayer", 31);
-	gmsgTeamFull = g_engfuncs.pfnRegUserMsg("TeamFull", 1);
-	gmsgCustomIcon = g_engfuncs.pfnRegUserMsg("CustomIcon", -1);
 	gmsgWeapons = REG_USER_MSG("Weapons", 8);
 
 	gmsgEntityInfo = REG_USER_MSG("EntityInfo", -1);
 	gmsgEmitSound = REG_USER_MSG("EmitSound", -1);
 	gmsgTempEntity = REG_USER_MSG("TempEntity", -1);
 	gmsgSkillVars = REG_USER_MSG("SkillVars", -1);
-
-	gmsgCampaignSelect = REG_USER_MSG("CmpgnSlct", 0);
 
 	gmsgTgtLaser = REG_USER_MSG("TgtLaser", -1);
 

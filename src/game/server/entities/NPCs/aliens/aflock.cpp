@@ -312,8 +312,6 @@ void CFlockingFlyer::Killed(CBaseEntity* attacker, int iGib)
 	SetSize(Vector(0, 0, 0), Vector(0, 0, 0));
 	pev->movetype = MOVETYPE_TOSS;
 
-	ClearShockEffect();
-
 	SetThink(&CFlockingFlyer::FallHack);
 	pev->nextthink = gpGlobals->time + 0.1;
 }

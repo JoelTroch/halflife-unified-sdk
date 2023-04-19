@@ -49,7 +49,7 @@ constexpr int MAX_WEAPON_ATTACK_MODES = 2;
 constexpr int MAX_PLAYERS = 32;
 
 constexpr int MAX_ALWAYS_VISIBLE_WEAPON_SLOTS = 5;
-#define MAX_WEAPON_SLOTS 10 // hud item selection slots
+#define MAX_WEAPON_SLOTS 5 // hud item selection slots
 
 static_assert(MAX_WEAPON_SLOTS >= MAX_ALWAYS_VISIBLE_WEAPON_SLOTS);
 static_assert(MAX_WEAPON_SLOTS <= 10);
@@ -79,9 +79,6 @@ enum class GibType
 	None = 0, // Sound only
 	Human,
 	Alien,
-	Pitdrone,
-	Voltigore,
-	ShockTrooper,
 };
 
 // Flags are stored in the type variable to save a byte.
@@ -107,16 +104,6 @@ enum WeaponId
 	WEAPON_TRIPMINE,
 	WEAPON_SATCHEL,
 	WEAPON_SNARK,
-	WEAPON_GRAPPLE,
-	WEAPON_EAGLE,
-	WEAPON_PIPEWRENCH,
-	WEAPON_M249,
-	WEAPON_DISPLACER,
-	WEAPON_SHOCKRIFLE,
-	WEAPON_SPORELAUNCHER,
-	WEAPON_SNIPERRIFLE,
-	WEAPON_KNIFE,
-	WEAPON_PENGUIN,
 };
 
 enum HudFlag
@@ -128,37 +115,6 @@ enum HudFlag
  *	@brief Indicates that a weapon does not use magazines.
  */
 constexpr int WEAPON_NOCLIP = -1;
-
-enum class SuitLightType
-{
-	Flashlight = 0,
-	Nightvision
-};
-
-struct SuitLightTypeInfo
-{
-	const std::string_view Name;
-};
-
-constexpr SuitLightTypeInfo SuitLightTypes[] =
-	{
-		{"flashlight"},
-		{"nightvision"}};
-
-constexpr std::optional<SuitLightType> SuitLightTypeFromString(std::string_view value)
-{
-	for (int i = 0; const auto& type : SuitLightTypes)
-	{
-		if (type.Name == value)
-		{
-			return static_cast<SuitLightType>(i);
-		}
-
-		++i;
-	}
-
-	return {};
-}
 
 // used by suit voice to indicate damage sustained and repaired type to player
 
@@ -281,7 +237,7 @@ constexpr Vector VEC_DEAD_VIEW(0, 0, -8);
 #define MENU_CLASSHELP2 7
 #define MENU_REPEATHELP 8
 // #define MENU_SPECHELP				9
-#define MENU_STATSMENU 9
+#define MENU_UNUSED 9 // Half-Life: Unified SDK - Vanilla branch notice - Was "MENU_STATSMENU", feel free to use this if you need it
 #define MENU_SCOREBOARD 10
 
 constexpr RGB24 RGB_WHITE{255, 255, 255};

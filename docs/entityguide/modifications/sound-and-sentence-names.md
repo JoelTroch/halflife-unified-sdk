@@ -6,7 +6,6 @@ Consult the TWHL entity guide for the original names used by the vanilla Half-Li
 
 ## Affected entities
 
-* `env_spritetrain`
 * `func_button`
 * `func_door`
 * `func_door_rotating`

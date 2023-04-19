@@ -484,8 +484,6 @@ void CBaseTurret::ActiveThink()
 	pev->nextthink = gpGlobals->time + 0.1;
 	StudioFrameAdvance();
 
-	UpdateShockEffect();
-
 	if ((!m_iOn) || (m_hEnemy == nullptr))
 	{
 		m_hEnemy = nullptr;
@@ -838,8 +836,6 @@ void CBaseTurret::SearchThink()
 	StudioFrameAdvance();
 	pev->nextthink = gpGlobals->time + 0.1;
 
-	UpdateShockEffect();
-
 	if (m_flSpinUpTime == 0 && 0 != m_flMaxSpin)
 		m_flSpinUpTime = gpGlobals->time + m_flMaxSpin;
 
@@ -896,8 +892,6 @@ void CBaseTurret::AutoSearchThink()
 	// ensure rethink
 	StudioFrameAdvance();
 	pev->nextthink = gpGlobals->time + 0.3;
-
-	UpdateShockEffect();
 
 	// If we have a target and we're still healthy
 

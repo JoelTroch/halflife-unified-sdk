@@ -848,19 +848,6 @@ public:
 
 	bool JumpToTarget(Activity movementAct, float waitTime);
 
-	// Shock rifle shock effect
-	float m_flShockDuration = 0;
-	float m_flShockTime = 0;
-	int m_iOldRenderMode = 0;
-	int m_iOldRenderFX = 0;
-	Vector m_OldRenderColor;
-	float m_flOldRenderAmt = 0;
-	bool m_fShockEffect = false;
-
-	void AddShockEffect(float r, float g, float b, float size, float flShockDuration);
-	void UpdateShockEffect();
-	void ClearShockEffect();
-
 	/**
 	 *	@brief Invokes @c callback on each friend
 	 *	@details Return false to stop iteration

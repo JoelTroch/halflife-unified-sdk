@@ -281,39 +281,3 @@ LINK_ENTITY_TO_CLASS(item_battery, CItemBattery);
 BEGIN_DATAMAP(CItemBattery)
 DEFINE_FIELD(m_ArmorAmount, FIELD_FLOAT),
 	END_DATAMAP();
-
-class CItemHelmet : public CItemBattery
-{
-public:
-	void OnCreate() override
-	{
-		CItem::OnCreate();
-		m_ArmorAmount = 40; // TODO: add to skill.json
-		pev->model = MAKE_STRING("models/barney_helmet.mdl");
-	}
-
-	bool AddItem(CBasePlayer* player) override
-	{
-		return AddItemCore(player, false);
-	}
-};
-
-LINK_ENTITY_TO_CLASS(item_helmet, CItemHelmet);
-
-class CItemArmorVest : public CItemBattery
-{
-public:
-	void OnCreate() override
-	{
-		CItem::OnCreate();
-		m_ArmorAmount = 60; // TODO: add to skill.json
-		pev->model = MAKE_STRING("models/barney_vest.mdl");
-	}
-
-	bool AddItem(CBasePlayer* player) override
-	{
-		return AddItemCore(player, false);
-	}
-};
-
-LINK_ENTITY_TO_CLASS(item_armorvest, CItemArmorVest);

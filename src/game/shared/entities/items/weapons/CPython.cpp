@@ -45,14 +45,6 @@ bool CPython::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CPython::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "357") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 void CPython::Precache()
 {
 	CBasePlayerWeapon::Precache();

@@ -38,7 +38,6 @@ public:
 	bool IsMultiplayer() override { return true; }
 	bool IsDeathmatch() override { return true; }
 	bool IsCoOp() override { return false; }
-	bool IsCTF() override { return false; }
 
 	bool ClientConnected(edict_t* pEntity, const char* pszName, const char* pszAddress, char szRejectReason[128]) override;
 	void InitHUD(CBasePlayer* pl) override;
@@ -47,7 +46,6 @@ public:
 
 	bool FPlayerCanTakeDamage(CBasePlayer* pPlayer, CBaseEntity* pAttacker) override;
 
-	void PlayerSpawn(CBasePlayer* pPlayer) override;
 	void PlayerThink(CBasePlayer* pPlayer) override;
 	bool FPlayerCanRespawn(CBasePlayer* pPlayer) override;
 	float FlPlayerSpawnTime(CBasePlayer* pPlayer) override;

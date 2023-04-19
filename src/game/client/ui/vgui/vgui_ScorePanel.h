@@ -265,7 +265,6 @@ private:
 
 	ScorePanel::HitTestPanel m_HitTestPanel;
 	// CommandButton* m_pCloseButton;
-	CommandButton* m_pStatsButton;
 	CLabelHeader* GetPlayerEntry(int x, int y) { return &m_PlayerEntries[x][y]; }
 
 public:

@@ -18,7 +18,6 @@
 #include "hud.h"
 
 #include "vgui_TeamFortressViewport.h"
-#include "vgui_StatsMenuPanel.h"
 
 #define MAX_LOGO_FRAMES 56
 
@@ -110,10 +109,6 @@ bool CHud::Redraw(float flTime, bool intermission)
 			m_iIntermission = intermission;
 			gViewPort->HideCommandMenu();
 			gViewPort->HideScoreBoard();
-			if (gViewPort->m_pStatsMenu && gViewPort->m_pStatsMenu->isVisible())
-			{
-				gViewPort->m_pStatsMenu->setVisible(false);
-			}
 			gViewPort->UpdateSpectatorPanel();
 		}
 		// Disabled in Opposing Force.

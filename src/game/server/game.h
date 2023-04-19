@@ -38,9 +38,6 @@ extern cvar_t mp_chattime;
 
 extern cvar_t sv_allowbunnyhopping;
 
-extern cvar_t ctf_capture;
-extern cvar_t multipower;
-extern cvar_t ctf_autoteam;
 extern cvar_t spamdelay;
 
 extern cvar_t sv_entityinfo_enabled;

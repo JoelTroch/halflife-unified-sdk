@@ -424,8 +424,7 @@ void PM_UpdateStepSound()
 	speed = pmove->velocity.Length();
 
 	// determine if we are on a ladder
-	// The Barnacle Grapple sets the FL_IMMUNE_LAVA flag to indicate that the player is not on a ladder
-	const bool fLadder = (pmove->movetype == MOVETYPE_FLY) && (pmove->flags & FL_IMMUNE_LAVA) == 0; // IsOnLadder();
+	const bool fLadder = (pmove->movetype == MOVETYPE_FLY) != 0; // IsOnLadder();
 
 	// UNDONE: need defined numbers for run, walk, crouch, crouch run velocities!!!!
 	if ((pmove->flags & FL_DUCKING) != 0 || fLadder)
@@ -2505,7 +2504,6 @@ void PM_Jump()
 
 	// See if user can super long jump?
 	const bool cansuperjump = atoi(pmove->PM_Info_ValueForKey(pmove->physinfo, "slj")) == 1;
-	const bool canjumppackjump = atoi(pmove->PM_Info_ValueForKey(pmove->physinfo, "jpj")) == 1;
 
 	// Acclerate upward
 	// If we are ducking...
@@ -2513,7 +2511,7 @@ void PM_Jump()
 	{
 		// Adjust for super long jump module
 		// UNDONE -- note this should be based on forward angles, not current velocity.
-		if ((cansuperjump || canjumppackjump) &&
+		if (cansuperjump &&
 			(pmove->cmd.buttons & IN_DUCK) != 0 &&
 			(pmove->flDuckTime > 0) &&
 			pmove->velocity.Length() > 50)
@@ -2526,11 +2524,6 @@ void PM_Jump()
 			}
 
 			pmove->velocity[2] = sqrt(2 * 800 * 56.0);
-
-			if (canjumppackjump)
-			{
-				PM_PlaySound(CHAN_STATIC, "ctf/pow_big_jump.wav", VOL_NORM, ATTN_NORM, 0, PITCH_NORM);
-			}
 		}
 		else
 		{

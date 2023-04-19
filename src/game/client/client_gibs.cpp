@@ -248,9 +248,6 @@ static void MsgFunc_ClientGibs(const char* name, BufferReader& reader)
 		case GibType::None: return nullptr;
 		case GibType::Human: return &HumanGibs;
 		case GibType::Alien: return &AlienGibs;
-		case GibType::Pitdrone: return &PitDroneGibs;
-		case GibType::Voltigore: return &VoltigoreGibs;
-		case GibType::ShockTrooper: return &ShockTrooperGibs;
 		default:
 			g_GameLogger->error("Invalid gib type {}", int(type));
 			return nullptr;

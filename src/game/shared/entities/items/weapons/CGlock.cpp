@@ -59,14 +59,6 @@ bool CGlock::GetWeaponInfo(WeaponInfo& info)
 	return true;
 }
 
-void CGlock::IncrementAmmo(CBasePlayer* pPlayer)
-{
-	if (pPlayer->GiveAmmo(1, "9mm") >= 0)
-	{
-		pPlayer->EmitSound(CHAN_STATIC, "ctf/pow_backpack.wav", 0.5, ATTN_NORM);
-	}
-}
-
 bool CGlock::Deploy()
 {
 	// pev->body = 1;

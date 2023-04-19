@@ -12,7 +12,6 @@ Consult TWHL's entity guide for more complete information about existing entitie
 * [ammo_all](entities/ammo_all.md)
 * [ammo_generic](entities/ammo_generic.md)
 * [env_fog](entities/env_fog.md)
-* [logic_campaignselect](entities/logic_campaignselect.md)
 * [logic_isskill](entities/logic_isskill.md)
 * [logic_random](entities/logic_random.md)
 * [logic_setcvar](entities/logic_setcvar.md)
@@ -20,7 +19,6 @@ Consult TWHL's entity guide for more complete information about existing entitie
 * [logic_setskillvar](entities/logic_setskillvar.md)
 * [player_sethealth](entities/player_sethealth.md)
 * [player_sethudcolor](entities/player_sethudcolor.md)
-* [player_setsuitlighttype](entities/player_setsuitlighttype.md)
 * [player_hassuit](entities/player_hassuit.md)
 * [player_hasweapon](entities/player_hasweapon.md)
 * [point_teleport](entities/point_teleport.md)
@@ -33,7 +31,6 @@ Consult TWHL's entity guide for more complete information about existing entitie
 * [func_healthcharger](entities/func_healthcharger.md)
 * [func_pushable](entities/func_pushable.md)
 * [func_recharge](entities/func_recharge.md)
-* [monster_blkop_osprey](entities/monster_blkop_osprey.md)
 * [monster_generic](entities/monster_generic.md)
 * [monster_osprey](entities/monster_osprey.md)
 * [monster_tentacle](entities/monster_tentacle.md)
@@ -44,6 +41,8 @@ Consult TWHL's entity guide for more complete information about existing entitie
 * [trigger_relay](entities/trigger_relay.md)
 * [trigger_teleport](entities/trigger_teleport.md)
 
+**Vanilla specific note:** Opposing Force's improved target handling in `func_tank` (and variants) is available as a toggle-able `#define`.
+
 ### Modifications that affect multiple entities
 
 * [Sound and sentence names](modifications/sound-and-sentence-names.md)
@@ -52,7 +51,6 @@ Consult TWHL's entity guide for more complete information about existing entitie
 
 * `target_cdaudio` (replaced by `ambient_music`)
 * `trigger_cdaudio` (replaced by `ambient_music`)
-* `func_tank_of`, `func_tankmortar_of`, `func_tankrocket_of`, `fuck_tanklaser_of`: merged into their original Half-Life variants
 * `test_effect`: Never used and non-functional
 * `world_items` (obsolete, replaced by individual entities)
 * `item_security`

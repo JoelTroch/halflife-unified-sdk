@@ -135,8 +135,6 @@ void CHud::Init()
 	m_DeathNotice.Init();
 	m_TextMessage.Init();
 	m_StatusIcons.Init();
-	m_FlagIcons.Init();
-	m_PlayerBrowse.Init();
 	m_ProjectInfo.Init();
 	m_DebugInfo.Init();
 	m_EntityInfo.Init();
@@ -237,11 +235,8 @@ void CHud::MsgFunc_HudColor(const char* pszName, BufferReader& reader)
 	m_HudColor.Green = reader.ReadByte();
 	m_HudColor.Blue = reader.ReadByte();
 
-	// Sync item color up if we're not in NVG mode
-	if (!m_NightVisionState)
-	{
-		m_HudItemColor = m_HudColor;
-	}
+	// Sync item color up
+	m_HudItemColor = m_HudColor;
 }
 
 void CHud::MsgFunc_CrosshairColor(const char* pszName, BufferReader& reader)
@@ -403,18 +398,4 @@ void CHud::AddHudElem(CHudBase* phudelem)
 float CHud::GetSensitivity()
 {
 	return m_flMouseSensitivity;
-}
-
-void CHud::SetNightVisionState(bool state)
-{
-	m_NightVisionState = state;
-
-	if (state)
-	{
-		m_HudItemColor = RGB_WHITE;
-	}
-	else
-	{
-		m_HudItemColor = m_HudColor;
-	}
 }

@@ -20,6 +20,21 @@
 
 #include "hud.h"
 
+// Half-Life: Unified SDK - Vanilla branch notice - START
+//
+// Opposing Force's nightvision does not uses a "beam" sprite like Half-Life's flashlight does.
+// In the original SDK, the "LightData" setup and "CHudFlashlight::Draw" code have checks for the presence of said beam.
+// Now that Opposing Force's nightvision is gone and that the flashlight does have a beam sprite, those "if" checks are
+// useless and thus have been disabled for micro-optimisation purposes.
+//
+// If you want to restore the original SDK beam checks OR you are going to implement a new "LightData" that does not have
+// a beam sprite, simply comment this define to restore those "if" checks to prevent crashes.
+// If you want to keep that micro-optimisation and not implement a new "LightData" that does not have a beam sprite, leave
+// it commented.
+//
+// Half-Life: Unified SDK - Vanilla branch notice - END
+#define NO_FLASHLIGHT_BEAM_CHECKS
+
 bool CHudFlashlight::Init()
 {
 	m_fFade = 0;
@@ -55,12 +70,16 @@ bool CHudFlashlight::VidInit()
 		data.m_prc1 = &gHUD.GetSpriteRect(HUD_flash_empty);
 		data.m_prc2 = &gHUD.GetSpriteRect(HUD_flash_full);
 
+#ifndef NO_FLASHLIGHT_BEAM_CHECKS
 		if (beam)
 		{
+#endif
 			const int HUD_flash_beam = gHUD.GetSpriteIndex(beam);
 			data.m_hBeam = gHUD.GetSprite(HUD_flash_beam);
 			data.m_prcBeam = &gHUD.GetSpriteRect(HUD_flash_beam);
+#ifndef NO_FLASHLIGHT_BEAM_CHECKS
 		}
+#endif
 
 		data.m_iWidth = data.m_prc2->right - data.m_prc2->left;
 
@@ -68,11 +87,6 @@ bool CHudFlashlight::VidInit()
 	};
 
 	m_Flashlight = setup("flash_empty", "flash_full", "flash_beam");
-	// NVG doesn't have a beam.
-	m_Nightvision = setup("nvg_empty", "nvg_full", nullptr);
-
-	m_nvSprite = SPR_Load("sprites/of_nv_b.spr");
-
 	return true;
 }
 
@@ -85,14 +99,11 @@ void CHudFlashlight::MsgFunc_FlashBat(const char* pszName, BufferReader& reader)
 
 void CHudFlashlight::MsgFunc_Flashlight(const char* pszName, BufferReader& reader)
 {
-	m_SuitLightType = static_cast<SuitLightType>(reader.ReadByte());
 	m_fOn = 0 != reader.ReadByte();
 	int x = reader.ReadByte();
 	m_iBat = x;
 	m_flBat = ((float)x) / 100.0;
 
-	// Always update this, so that changing to flashlight type disables NVG effects
-	gHUD.SetNightVisionState(m_SuitLightType == SuitLightType::Nightvision && m_fOn);
 }
 
 bool CHudFlashlight::Draw(float flTime)
@@ -125,16 +136,15 @@ bool CHudFlashlight::Draw(float flTime)
 	{ // draw the flashlight beam
 		x = ScreenWidth - data->m_iWidth / 2;
 
+#ifndef NO_FLASHLIGHT_BEAM_CHECKS
 		if (data->m_hBeam != 0)
 		{
+#endif
 			SPR_Set(data->m_hBeam, color);
 			SPR_DrawAdditive(0, x, y, data->m_prcBeam);
+#ifndef NO_FLASHLIGHT_BEAM_CHECKS
 		}
-
-		if (m_SuitLightType == SuitLightType::Nightvision)
-		{
-			DrawNightVision();
-		}
+#endif
 	}
 
 	// draw the flashlight energy level
@@ -151,40 +161,4 @@ bool CHudFlashlight::Draw(float flTime)
 
 
 	return true;
-}
-
-void CHudFlashlight::DrawNightVision()
-{
-	static int lastFrame = 0;
-
-	auto frameIndex = rand() % gEngfuncs.pfnSPR_Frames(m_nvSprite);
-
-	if (frameIndex == lastFrame)
-		frameIndex = (frameIndex + 1) % gEngfuncs.pfnSPR_Frames(m_nvSprite);
-
-	lastFrame = frameIndex;
-
-	if (0 != m_nvSprite)
-	{
-		const auto width = gEngfuncs.pfnSPR_Width(m_nvSprite, 0);
-		const auto height = gEngfuncs.pfnSPR_Height(m_nvSprite, 0);
-
-		gEngfuncs.pfnSPR_Set(m_nvSprite, 0, 170, 0);
-
-		Rect drawingRect;
-
-		for (auto x = 0; x < gHUD.m_scrinfo.iWidth; x += width)
-		{
-			drawingRect.left = 0;
-			drawingRect.right = x + width >= gHUD.m_scrinfo.iWidth ? gHUD.m_scrinfo.iWidth - x : width;
-
-			for (auto y = 0; y < gHUD.m_scrinfo.iHeight; y += height)
-			{
-				drawingRect.top = 0;
-				drawingRect.bottom = y + height >= gHUD.m_scrinfo.iHeight ? gHUD.m_scrinfo.iHeight - y : height;
-
-				gEngfuncs.pfnSPR_DrawAdditive(frameIndex, x, y, &drawingRect);
-			}
-		}
-	}
 }

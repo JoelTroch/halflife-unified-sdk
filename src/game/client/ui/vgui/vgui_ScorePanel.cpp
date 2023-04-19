@@ -30,7 +30,6 @@
 #include "vgui_loadtga.h"
 #include "voice_status.h"
 #include "vgui_SpectatorPanel.h"
-#include "vgui_StatsMenuPanel.h"
 
 constexpr int ScoreColorsFG[5][3] =
 	{
@@ -238,10 +237,6 @@ ScorePanel::ScorePanel(int x, int y, int wide, int tall)
 	m_pCloseButton->setBoundKey((char)255);
 	m_pCloseButton->setContentAlignment(Label::a_center);
 	*/
-
-	m_pStatsButton = new CommandButton(CHudTextMessage::BufferedLocaliseTextString("#CTFMenu_Stats"), wide - XRES(124), YRES(0), XRES(124), YRES(24));
-	m_pStatsButton->setParent(this);
-	m_pStatsButton->addActionSignal(new CMenuHandler_ScoreStatWindow(MENU_STATSMENU));
 
 	Initialize();
 }
@@ -489,20 +484,9 @@ int ScorePanel::RebuildTeams()
 	// clear out player counts from teams
 	int i;
 
-	if (gHUD.m_Teamplay == 2)
+	for (i = 1; i <= m_iNumTeams; i++)
 	{
-		// Hardcoded to 2 because m_iNumTeams may not be the correct value at this time
-		for (i = 1; i <= 2; i++)
-		{
-			g_TeamInfo[i].players = 0;
-		}
-	}
-	else
-	{
-		for (i = 1; i <= m_iNumTeams; i++)
-		{
-			g_TeamInfo[i].players = 0;
-		}
+		g_TeamInfo[i].players = 0;
 	}
 
 	// rebuild the team list
@@ -518,52 +502,37 @@ int ScorePanel::RebuildTeams()
 
 		int j;
 
-		if (gHUD.m_Teamplay == 2)
+		m_iNumTeams = std::max(j, m_iNumTeams);
+		// is this player in an existing team?
+		for (j = 1; j <= m_iNumTeams; j++)
 		{
-			// CTF uses predefined teams with fixed team ids
-			j = g_PlayerExtraInfo[i].teamid;
-
 			if (g_TeamInfo[j].name[0] == '\0')
-			{
-				strncpy(g_TeamInfo[j].name, g_PlayerExtraInfo[i].teamname, MAX_TEAM_NAME);
-				g_TeamInfo[j].players = 0;
-			}
+				break;
 
-			m_iNumTeams = std::max(j, m_iNumTeams);
+			if (!stricmp(g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name))
+				break;
 		}
-		else
+
+		if (j > m_iNumTeams)
 		{
-			// is this player in an existing team?
+			// they aren't in a listed team, so make a new one
+			// search through for an empty team slot
 			for (j = 1; j <= m_iNumTeams; j++)
 			{
 				if (g_TeamInfo[j].name[0] == '\0')
 					break;
-
-				if (!stricmp(g_PlayerExtraInfo[i].teamname, g_TeamInfo[j].name))
-					break;
 			}
 
-			if (j > m_iNumTeams)
-			{
-				// they aren't in a listed team, so make a new one
-				// search through for an empty team slot
-				for (j = 1; j <= m_iNumTeams; j++)
-				{
-					if (g_TeamInfo[j].name[0] == '\0')
-						break;
-				}
+			m_iNumTeams = std::max(j, m_iNumTeams);
 
-				m_iNumTeams = std::max(j, m_iNumTeams);
-
-				strncpy(g_TeamInfo[j].name, g_PlayerExtraInfo[i].teamname, MAX_TEAM_NAME);
-				g_TeamInfo[j].players = 0;
-			}
+			strncpy(g_TeamInfo[j].name, g_PlayerExtraInfo[i].teamname, MAX_TEAM_NAME);
+			g_TeamInfo[j].players = 0;
 		}
 
 		g_TeamInfo[j].players++;
 	}
 
-	const int teamsToCheck = gHUD.m_Teamplay == 2 ? 2 : m_iNumTeams;
+	const int teamsToCheck = m_iNumTeams;
 
 	// clear out any empty teams
 	for (i = 1; i <= teamsToCheck; i++)
